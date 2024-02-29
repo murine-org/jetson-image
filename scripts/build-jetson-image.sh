@@ -87,7 +87,8 @@ esac
 
 # Build the image where the jetson image will be built
 if [ "$board" == "jetson-nano" ] || [ "$board" == "jetson-nano-2gb" ]; then
-    sudo -E XDG_RUNTIME_DIR= podman build \
+    #sudo -E XDG_RUNTIME_DIR= podman build \
+    sudo XDG_RUNTIME_DIR= podman build \
         --cap-add=all \
         --jobs=4 \
         -f Containerfile.image.l4t32 \

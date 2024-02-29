@@ -3,7 +3,10 @@ FROM ubuntu:jammy
 LABEL org.opencontainers.image.authors="Badr @pythops"
 
 # Define the BSP version
-ARG BSP=https://developer.download.nvidia.com/embedded/L4T/r32_Release_v7.4/T210/Jetson-210_Linux_R32.7.4_aarch64.tbz2
+#ARG BSP=https://developer.download.nvidia.com/embedded/L4T/r32_Release_v7.4/T210/Jetson-210_Linux_R32.7.4_aarch64.tbz2
+ARG BSP=https://www.dropbox.com/sh/vj17kzt0q3jluqx/AAAvj99GETgFYv3hhyPLi32qa/Jetson-210_Linux_R32.5.1_aarch64.tbz2
+#ARG BSP=https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/t210/jetson-210_linux_r32.6.1_aarch64.tbz2
+
 
 # Install different dependencies
 RUN apt update && \

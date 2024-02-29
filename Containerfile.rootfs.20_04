@@ -39,37 +39,6 @@ RUN apt install -y \
         i2c-tools \
         bridge-utils
 
-# Additional tools
-#RUN apt install -y \
-#        bash-completion \
-#        build-essential \
-#        btrfs-progs \
-#        cmake \
-#        curl \
-#        dnsutils \
-#        htop \
-#        iotop \
-#        isc-dhcp-client \
-#        iputils-ping \
-#        kmod \
-#        linux-firmware \
-#        locales \
-#        net-tools \
-#        netplan.io \
-#        pciutils \
-#        python3-dev \
-#        ssh \
-#        sudo \
-#        udev \
-#        unzip \
-#        usbutils \
-#        neovim \
-#        wpasupplicant \
-#        parted \
-#        gdisk \
-#        e2fsprogs \
-#        mtd-utils
-
 # Additional tools - no devtools
 RUN apt install -y \
         bash-completion \

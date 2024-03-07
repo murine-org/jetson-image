@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:bionic
 
 LABEL org.opencontainers.image.authors="Badr @pythops"
 
@@ -32,8 +32,7 @@ RUN apt install -y \
         libegl1 \
         libegl1-mesa \
         libgtk-3-0 \
-        python2 \
-        python-is-python2 \
+        python \
         libgstreamer1.0-0 \
         libgstreamer-plugins-bad1.0-0 \
         i2c-tools \

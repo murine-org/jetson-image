@@ -15,7 +15,7 @@ jobs:
               -d '{
                     "branch": "MUS-5876-murine-os-deployments",
                     "parameters": {
-                      "continuation-params": "{\"api-exclusive-build\": true}",
+                      "continuation-params": "{\"api-exclusive-build\": true, \"run-setup\": false}",
                       "modules": "dax/os_image_creation",
                       "force-all": true
                     }

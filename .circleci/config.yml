@@ -10,10 +10,10 @@ jobs:
           name: "Trigger murine-os build"
           command: |
             curl -X POST https://circleci.com/api/v2/project/github/murine-org/murine/pipeline \
-              -H "Circle-Token: $PERSONAL_ACCESS_TOKEN_RAJ" \
+              -H "Circle-Token: $CIRCLECI_PAT" \
               -H "Content-Type: application/json" \
               -d '{
-                    "branch": "develop",
+                    "branch": "MUS-5876-murine-os-deployments",
                     "parameters": {
                       "continuation-params": "{\"run-setup\": false}",
                       "modules": "dax/os_image_creation",

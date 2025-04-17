@@ -31,10 +31,10 @@ jobs:
       - run:
           name: "Run Murine OS build"
           command: |
-            pip3 install --no-deps --use-pep517 -e ./iot_shared
             git clone git@github.com:murine-org/jetson-image.git $HOME/jetson-image
             git clone git@github.com:murine-org/ops-ansible.git $HOME/ops-ansible
             git clone git@github.com:murine-org/murine.git $HOME/murine
+            pip3 install --no-deps --use-pep517 -e $HOME/murine/iot_shared
             sudo python3 $HOME/murine/dax/os_image_creation/immutable/scripts/make_squashfs.py \
               --jetson $HOME/jetson-image \
               --ops $HOME/ops-ansible \
@@ -87,7 +87,7 @@ workflows:
         - equal: [ << pipeline.git.branch >>, MUS-5876-murine-cicd ]
     jobs:
       - murine-os-build:
-          name: "Murine OS Build on dev"
+          name: "Murine OS Build"
           context:
             - aws
             - murine-os

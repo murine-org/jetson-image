@@ -17,7 +17,7 @@ jobs:
                     "parameters": {
                       "continuation-params": "{\"run-setup\": false}",
                       "modules": "dax/os_image_creation",
-                      "force-all": "true"
+                      "force-all": true
                     }
                   }'
 

@@ -1,93 +1,29 @@
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@2.0.6
-
-parameters:
-  api_exclusive_build:
-    type: boolean
-    default: false
-
 jobs:
-  murine-os-build:
-    machine:
-      image: ubuntu-2204:2024.01.1
-    environment:
-      KERNEL_VERSION: "4.9.201-murine"
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "b8:58:d9:0a:31:5f:80:38:6e:cc:36:43:17:26:24:8a"
-
-      - run:
-          name: "Setup keys & install dependencies"
-          command: |
-            mkdir -p "$HOME/.ssh"
-            echo "$DEVICE_MASTER_KEY_PUB" > "$HOME/.ssh/dax-master.key.pub"
-            echo "$DEVICE_VISITOR_KEY_PUB" >> "$HOME/.ssh/visitor.key.pub"
-            sudo apt-get update --fix-missing
-            sudo apt-get install -y podman android-sdk-libsparse-utils qemu-user-static qemu-user
-
-      - run:
-          name: "Run Murine OS build"
-          command: |
-            git clone git@github.com:murine-org/jetson-image.git $HOME/jetson-image
-            git clone git@github.com:murine-org/ops-ansible.git $HOME/ops-ansible
-            git clone git@github.com:murine-org/murine.git $HOME/murine
-            pip3 install --no-deps --use-pep517 -e $HOME/murine/iot_shared
-            sudo python3 $HOME/murine/dax/os_image_creation/immutable/scripts/make_squashfs.py \
-              --jetson $HOME/jetson-image \
-              --ops $HOME/ops-ansible \
-              --kernel "$KERNEL_VERSION" \
-              --public $HOME/.ssh/dax-master.key.pub \
-              --ssh-user murine \
-              --ssh-public $HOME/.ssh/visitor.key.pub \
-              --output $HOME/out/
-
-      - run:
-          name: "Verify and Upload binaries to S3"
-          command: |
-            FILE_PATH="$HOME/out/$KERNEL_VERSION/root-$KERNEL_VERSION.squashfs"
-            if [ ! -f "$FILE_PATH" ]; then
-              echo "❌ Error: Expected binary file not created: $FILE_PATH"
-              exit 1
-            fi
-            cd $HOME/murine/dax/os_image_creation
-            make rootfs-push-s3 ROOT_FS_PATH="$FILE_PATH" ENV="$ENV"
-
-      - run:
-          name: "Create a package and push"
-          command: |
-            sudo apt-get update --fix-missing
-            sudo apt-get install -y p7zip-full
-            echo -e "$DEVICE_MASTER_KEY" >> "$HOME/.ssh/dax-master.key"
-            pip3 install pyjwt boto3 cryptography
-            cd $HOME/murine/dax/os_image_creation
-            make murineos-package-push RootFS="$FILE_PATH" \
-              DEVICE_PRIVATE_KEY="$HOME/.ssh/dax-master.key" ENV="$ENV"
-
-  murine-os-tag-prod-release:
+  trigger-murine-os-build:
     resource_class: small
-    machine:
-      image: ubuntu-2204:2024.01.1
+    docker:
+      - image: cimg/base:current
     steps:
-      - checkout
-      - aws-cli/setup
       - run:
-          name: "Tag the latest package with stable"
+          name: "Trigger murine-os build"
           command: |
-            make murineos-tag-stable-release
-
+            curl -X POST https://circleci.com/api/v2/project/github/murine-org/murine/pipeline \
+              -H "Circle-Token: $PERSONAL_ACCESS_TOKEN_RAJ" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "branch": "develop",
+                    "parameters": {
+                      "continuation-params": "{\"run-setup\": false}",
+                      "modules": "dax/os_image_creation",
+                      "force-all": "true"
+                    }
+                  }'
 
 workflows:
-  murine-os-build-api-workflow:
-    when:
-      or:
-        - equal: [ << pipeline.parameters.api_exclusive_build >>, true ]
-        - equal: [ << pipeline.git.branch >>, MUS-5876-murine-cicd ]
+  trigger-murine-os-build-workflow:
     jobs:
-      - murine-os-build:
-          name: "Murine OS Build"
-          context:
-            - aws
+      - trigger-murine-os-build:
+          context: 
             - murine-os

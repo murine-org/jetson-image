@@ -13,7 +13,7 @@ jobs:
               -H "Circle-Token: $CIRCLECI_PAT" \
               -H "Content-Type: application/json" \
               -d '{
-                    "branch": "MUS-5876-murine-os-deployments",
+                    "branch": "develop",
                     "parameters": {
                       "continuation-params": "{\"api-exclusive-build\": true, \"run-setup\": false}",
                       "modules": "dax/os_image_creation",

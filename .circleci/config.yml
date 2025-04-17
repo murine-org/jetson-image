@@ -22,6 +22,6 @@ jobs:
 workflows:
   trigger-murine-os-build-workflow:
     jobs:
-      - trigger-murine-os-build
-      context:
-        - murine-os
+      - trigger-murine-os-build:
+          context: 
+            - murine-os

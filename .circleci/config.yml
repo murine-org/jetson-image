@@ -27,3 +27,8 @@ workflows:
       - trigger-murine-os-build:
           context: 
             - murine-os
+          filters:
+            branches:
+              only:
+                - master
+

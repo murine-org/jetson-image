@@ -39,36 +39,25 @@ RUN apt install -y \
         i2c-tools \
         bridge-utils
 
-# Additional tools
+# Additional tools   
 RUN apt install -y \
-        bash-completion \
-        build-essential \
-        btrfs-progs \
-        cmake \
-        curl \
-        dnsutils \
-        htop \
-        iotop \
-        isc-dhcp-client \
-        iputils-ping \
-        kmod \
-        linux-firmware \
-        locales \
-        net-tools \
-        netplan.io \
-        pciutils \
-        python3-dev \
-        ssh \
-        sudo \
-        udev \
-        unzip \
-        usbutils \
-        neovim \
-        wpasupplicant \
-        parted \
-        gdisk \
-        e2fsprogs \
-        mtd-utils
+    curl \
+    e2fsprogs \
+    gdisk \
+    iputils-ping \
+    kmod \
+    linux-firmware \
+    locales \
+    netplan.io \
+    parted \
+    ssh \
+    sudo \
+    udev \
+    unzip \
+    usbutils \
+    wpasupplicant && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Resize the rootfs
 COPY scripts/resizerootfs.sh /usr/local/bin
